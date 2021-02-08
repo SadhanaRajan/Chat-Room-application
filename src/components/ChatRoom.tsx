@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import ReactDOM from 'react-dom';
 import styles from "../styles/ChatRoom.module.css";
 import { Form, Input, Button } from 'antd';
 
@@ -8,13 +9,15 @@ interface Props {
 }
 
 interface State {
+	messageSent: string | null
 }
 
 export default class ChatRoom extends Component<Props,State> {
+	private formRef : any
 	private messagesEnd: any;
 	constructor(props: Props) {
 		super(props);
-		
+		this.formRef = React.createRef();
 	}
 	  
 	componentDidMount() {
@@ -27,6 +30,17 @@ export default class ChatRoom extends Component<Props,State> {
 	public render(){
 		return (
 		<div className={styles.ChatRoom}>
+				{this.getChatRoomHeader()}
+				{this.getMessagesArea()}
+				{this.getChatRoomFooter()}
+			
+			
+		</div>
+		);
+	}
+	
+	private getChatRoomHeader(){
+		return (
 			<div className={styles.ChatHeader}>
 				<div className={styles.chatRoomName}>{this.props.selectedRoom.name}</div>
 				<div className={styles.chatRoomUsers}>
@@ -43,43 +57,61 @@ export default class ChatRoom extends Component<Props,State> {
 					})}
 				</div>
 			</div>
+		);
+	}
+	
+	private getMessagesArea(){
+		return (
 			<div className={styles.messages}>
 				{this.props.selectedRoom.messages.map((x:any,i:number,arr:any[])=>{
-					return (
-						<div key={i}>
-							<div className={styles.pastMessage}>{x.message}</div>
-							<div className={styles.sentUser}>{x.name}</div>
-						
-							{/* <div className={styles.pastMessage}>{x.message}</div>
-							<div className={styles.sentUser}>{x.name}</div>
-							<div className={styles.pastMessage}>{x.message}</div>
-							<div className={styles.sentUser}>{x.name}</div>
-							<div className={styles.pastMessage}>{x.message}</div>
-							<div className={styles.sentUser}>{x.name}</div>
-							<div className={styles.pastMessage}>{x.message}</div>
-							<div className={styles.sentUser}>{x.name}</div>
-							<div className={styles.pastMessage}>{x.message}</div>
-							<div className={styles.sentUser}>{x.name}</div> */}
-						</div>
-					);
+					if(x.name===this.props.username){
+						return (
+							<div key={i}>
+								<div className={styles.currentUserMessage}>{x.message}</div>
+							</div>
+						);
+					} else {
+						return (
+							<div key={i}>
+								<div className={styles.pastMessage}>{x.message}</div>
+								{x.name!==this.props.username && <div className={styles.sentUser}>{x.name}</div>}
+							</div>
+						);
+					}
 				})}
 				<div ref={(el) => { this.messagesEnd = el; }}></div>
 			</div>
+		);
+	}
+	
+	private scrollToBottom = () => {
+	  this.messagesEnd.scrollIntoView();
+	}
+	private getChatRoomFooter(){
+		return (
 			<div className={styles.typingArea}>
 				<Form
+					ref={this.formRef}
 					layout="inline"
 					onFinish={(values) => {
-						console.log("Received values from form: ", values.currentText);
-						}}
+						if(values && values.currentText) {
+							let trimmedText = values.currentText.replace(/^\s*(\S+)\s*$/, "$1");
+							if(trimmedText.length>0) {
+								this.sendMessage(trimmedText);
+							}
+						}
+					}}
 				>
 					<Form.Item
 						name="currentText"
 						label=""
+						
 					>
 						<Input
 							type="text"
 							placeholder='Type a message...'
 							className={styles.inputBox}
+							value=''
 						/>
 					</Form.Item>
 					<Form.Item>
@@ -90,11 +122,35 @@ export default class ChatRoom extends Component<Props,State> {
 					</Form.Item>
 				</Form>
 			</div>
-		</div>
 		);
 	}
 	
-	private scrollToBottom = () => {
-	  this.messagesEnd.scrollIntoView();
+	private async sendMessage(msg: string) {
+		const requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+			  name: this.props.username,
+			  message: msg,
+			})
+		};
+		fetch('http://localhost:8080/api/rooms/0/messages', requestOptions)
+			.then(res => res.json())
+			.then(() => {
+				fetch('http://localhost:8080/api/rooms/' + this.props.selectedRoom.id + '/messages')
+				.then(res => res.json())
+				.then((updatedMessages) => {
+					this.props.selectedRoom.messages = updatedMessages;
+					this.formRef.current.resetFields();
+					this.setState({
+						messageSent: msg
+					});
+			}, (error) => {
+				console.error(error.message);
+				this.setState({
+					messageSent: null
+				});
+			});
+		});
 	}
 }

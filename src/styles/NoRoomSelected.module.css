@@ -1,6 +1,6 @@
 .centerMessage{
 	position: absolute;
-	width: 300px;
+	width: fit-content;
 	height: 200px;
 	z-index: 15;
 	top: 50%;

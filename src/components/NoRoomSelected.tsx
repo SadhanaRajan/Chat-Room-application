@@ -16,7 +16,7 @@ export default class NoRoomSelected extends Component<Props,State> {
 		return (
 			<div className={styles.centerMessage}>
 				{this.props.rooms.length>1 && (
-					<div>Please select a room from the list</div>
+					<div><b>&#x27F5;&nbsp;&nbsp;</b>Please select a room from the list</div>
 				)}
 				{this.props.rooms.length===0 && (
 					<div>It seems that no chat rooms are created yet... Please meet up in person ;)</div>

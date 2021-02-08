@@ -36,7 +36,7 @@ export default class App extends Component<Props,State> {
 					username: username
 				});
 			}, (error) => {
-		console.log(error.message);
+				console.error(error.message);
 				this.setState({
 					page: 'login',
 					username: username

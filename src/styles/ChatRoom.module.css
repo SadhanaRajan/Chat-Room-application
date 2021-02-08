@@ -19,13 +19,13 @@
 }
 
 .messages {
-	position: fixed;
 	margin-top: 4px;
-	height: -webkit-fill-available;
+	height: 73%;
 	overflow-y: auto;
-	width: 100%;
 	background-color: #eff1f2;
 	font-size: large;
+	display: flex;
+	flex-direction: column;
 }
 
 .typingArea {
@@ -59,6 +59,21 @@
 	margin: 0.5em;
 	line-height: 1.1em;
 	background-color: white;
+	margin-right: auto;
+}
+
+.currentUserMessage {
+	width: fit-content;
+	padding: 0.5em;
+	border-radius: 1em;
+	margin: 0.5em;
+	line-height: 1.1em;
+	background-color: #ff1940;
+	color: white;
+	display: flex;
+	flex-shrink: 0;
+	flex-direction: row-reverse;
+	margin-left: auto;
 }
 
 .sentUser {
