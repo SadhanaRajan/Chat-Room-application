@@ -29,6 +29,8 @@ You will also see any lint errors in the console.
 
 We have provided a simple api server for you. You can run `npm run api-server` to start it. Read the [spec](./spec/api-endpoints.md) for more details on the api.
 
+### 4. Testing the app
+
 `npm test`
 
 Launches the test runner in the interactive watch mode.\
