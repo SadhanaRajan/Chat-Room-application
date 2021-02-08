@@ -107,7 +107,7 @@ export default class ChatRoom extends Component<Props,State> {
 					<Form.Item
 						name="currentText"
 						label=""
-						
+						style={{width:'80%'}}
 					>
 						<Input
 							type="text"

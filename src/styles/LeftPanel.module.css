@@ -24,6 +24,11 @@
 	font-size: 14px;
 }
 
+.roomList {
+	height: 75%;
+	overflow-y: auto;
+}
+
 .roomName {
 	font-size: 20px;
 	height: 60px;

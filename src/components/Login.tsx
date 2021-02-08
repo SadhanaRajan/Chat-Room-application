@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from "../styles/Login.module.css";
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Alert } from 'antd';
 
 interface Props {
   loginWithUsername: (username: string)=>void
@@ -35,6 +35,7 @@ export default class Login extends Component<Props,State> {
                         Join the DoorDash Chat!
                     </Button>
                 </Form.Item>
+                {/* <Alert message="Usernames are case sensitive" type="info" /> */}
             </Form>
         )
     }

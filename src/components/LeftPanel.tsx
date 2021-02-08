@@ -34,17 +34,40 @@ export default class LeftPanel extends Component<Props,State> {
 		  5000
 		);
 	}
-	
+
 	public componentWillUnmount() {
 		if(this.intervalID) {
 			clearInterval(this.intervalID);
 		}
 	}
 	
+	public render() {
+		return (
+			<div className={styles.LeftPanel}>
+				<div className={styles.nameTime}>
+					<div className={styles.username}>{this.props.username}</div>
+					{this.state.onlineTimer && <div className={styles.onlineTime}>Online for {this.state.onlineTimer}</div>}
+				</div>
+				<div className={styles.roomList}>
+					{this.props.rooms.map((x,i)=>{
+						return (
+							<div
+								key={i}
+								className={`${styles.roomName} ${this.state.selectedRoom===x.id?styles.selectedRoomName:''}`}
+								onClick={()=>{this.selectRoom(x.id, x.name)}}
+							>{x.name}</div>
+						);
+					})}
+				</div>
+				<Button type="link" className={styles.logOutLink} onClick={()=>this.props.logOut()}>
+					&#x21e4;&nbsp;Log out
+				</Button>
+			</div>
+		);
+	}
+
 	private millisecondsToStr () {
-		// TIP: to find current time in milliseconds, use:
-		// var  current_time_milliseconds = new Date().getTime();
-		const milliseconds = Date.now() - this.startTime;	
+		const milliseconds = Date.now() - this.startTime;
 		function numberEnding (number: number) {
 			return (number > 1) ? 's' : '';
 		}
@@ -54,7 +77,7 @@ export default class LeftPanel extends Component<Props,State> {
 		if (years) {
 			return years + ' year' + numberEnding(years);
 		}
-		//TODO: Months! Maybe weeks? 
+		//TODO: Months! Maybe weeks?
 		var days = Math.floor((temp %= 31536000) / 86400);
 		if (days) {
 			return days + ' day' + numberEnding(days);
@@ -71,38 +94,13 @@ export default class LeftPanel extends Component<Props,State> {
 		if (seconds) {
 			return seconds + ' second' + numberEnding(seconds);
 		}
-		return 'less than a second'; //'just now' //or other string you like;
+		return 'less than a second';
 	}
 	
-	private getOnlineTime() {	
+	private getOnlineTime() {
 		this.setState({
 			onlineTimer: this.millisecondsToStr()
 		})
-	}
-	
-	public render() {
-		return (
-			<div className={styles.LeftPanel}>
-				<div className={styles.nameTime}>
-					<div className={styles.username}>{this.props.username}</div>
-					{this.state.onlineTimer && <div className={styles.onlineTime}>Online for {this.state.onlineTimer}</div>}
-				</div>
-				<div>
-					{this.props.rooms.map((x,i)=>{
-						return (
-							<div
-								key={i}
-								className={`${styles.roomName} ${this.state.selectedRoom===x.id?styles.selectedRoomName:''}`}
-								onClick={()=>{this.selectRoom(x.id, x.name)}}
-							>{x.name}</div>
-						);
-					})}
-				</div>
-				<Button type="link" className={styles.logOutLink} onClick={()=>this.props.logOut()}>
-					&#x21e4;&nbsp;Log out
-				</Button>
-			</div>
-		);
 	}
 	
 	private selectRoom(roomId:number, roomName:string): void {
