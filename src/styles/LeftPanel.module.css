@@ -1,0 +1,43 @@
+.LeftPanel {
+	width: 300px;
+	min-width: 300px;
+	height: 100vh;
+	position: relative;
+	background-color: #ff1940;
+	color: white;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	transition: 0.5s;
+}
+
+.nameTime {
+	margin-bottom: 30px;
+	padding: 30px;
+}
+
+.username {
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.onlineTime {
+	font-size: 14px;
+}
+
+.roomName {
+	font-size: 20px;
+	height: 60px;
+	line-height: 60px;
+	padding: 0 8px 0 30px;
+	text-decoration: none;
+	display: block;
+	transition: 0.3s;
+}
+
+.roomName:hover {
+	cursor: pointer;
+}
+
+.selectedRoomName {
+	background-color: #800d20;
+}

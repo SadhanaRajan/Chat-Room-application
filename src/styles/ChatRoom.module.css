@@ -1,0 +1,79 @@
+.ChatWindow {
+	display: flex;
+}
+
+.ChatRoom {
+	height: 100vh;
+	width: 100%;
+	min-width: 500px;
+}
+
+.ChatHeader {
+	height: 15% !important;
+	width: 100%;
+	background-color: white;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	text-align: center;
+	padding: 20px;
+	color: #686868
+}
+
+.messages {
+	position: fixed;
+	margin-top: 4px;
+	height: -webkit-fill-available;
+	overflow-y: auto;
+	width: 100%;
+	background-color: #eff1f2;
+	font-size: large;
+}
+
+.typingArea {
+	background-color: white;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	box-shadow: 0 -4px 0 0px rgb(0 0 0 / 10%);
+	display: flex;
+	font-size: 20px;
+	padding: 30px;
+}
+
+.chatRoomName {
+	font-weight: 400;
+	font-size: 30px;
+}
+
+.chatRoomUsers {
+	font-size: 20px;
+}
+
+.currentUserName {
+	color: #ff1940;
+}
+
+.pastMessage {
+	width: fit-content;
+	padding: 0.5em;
+	border-radius: 1em;
+	margin: 0.5em;
+	line-height: 1.1em;
+	background-color: white;
+}
+
+.sentUser {
+	padding: 0.5em;
+	margin: 0.5em;
+}
+
+
+.inputBox {
+	height: 60px;
+	font-size: 20px;
+}
+
+.sendButton {
+	padding-top: 10px;
+	font-size: 20px;
+	font-weight: bold;
+}

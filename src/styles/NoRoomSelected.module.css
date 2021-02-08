@@ -1,0 +1,10 @@
+.centerMessage{
+	position: absolute;
+	width: 300px;
+	height: 200px;
+	z-index: 15;
+	top: 50%;
+	left: 50%;
+	margin: -300px 0 0 0px;
+	font-size: large;
+}
