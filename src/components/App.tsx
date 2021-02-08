@@ -56,6 +56,11 @@ export default class App extends Component<Props,State> {
 					<Chat
 						username={this.state.username}
 						rooms={this.rooms}
+						logOut={()=>{
+							this.setState({
+								page: 'login'
+							})
+						}}
 					/>
 				)}
 			</Fragment>

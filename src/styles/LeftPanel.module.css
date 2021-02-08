@@ -41,3 +41,14 @@
 .selectedRoomName {
 	background-color: #800d20;
 }
+
+.logOutLink {
+	font-size: 20px;
+	padding: 0 8px 0 30px;
+	color: black;
+	bottom: 0;
+}
+
+.logOutLink:hover {
+	color: white;
+}

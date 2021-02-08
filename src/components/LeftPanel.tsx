@@ -6,6 +6,7 @@ interface Props {
 	username: string
 	rooms: any[]
 	selectedRoom: (roomId: number, roomName: string)=>void;
+	logOut: ()=>void
 }
 
 interface State {
@@ -49,6 +50,9 @@ export default class LeftPanel extends Component<Props,State> {
 					);
 				})}
 			</div>
+			<Button type="link" className={styles.logOutLink} onClick={()=>this.props.logOut()}>
+				&#x21e4;&nbsp;Log out
+			</Button>
 		</div>
 		);
 	}

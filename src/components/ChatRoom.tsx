@@ -49,10 +49,9 @@ export default class ChatRoom extends Component<Props,State> {
 						.filter((x:string)=>x!==this.props.username)
 						.map((x: string, i:number, arr: string[])=>{
 						return (
-							<>
-								&#x2c;&nbsp;
-								<span key={i}>{x}</span>
-							</>
+							<span key={i}>
+								&#x2c;&nbsp;{x}
+							</span>
 						);
 					})}
 				</div>
@@ -74,7 +73,7 @@ export default class ChatRoom extends Component<Props,State> {
 						return (
 							<div key={i}>
 								<div className={styles.pastMessage}>{x.message}</div>
-								{x.name!==this.props.username && <div className={styles.sentUser}>{x.name}</div>}
+								{arr[i+1] && arr[i].name!==arr[i+1].name && <div className={styles.sentUser}>{x.name}</div>}
 							</div>
 						);
 					}

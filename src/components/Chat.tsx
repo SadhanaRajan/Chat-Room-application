@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import styles from "../styles/ChatRoom.module.css";
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import LeftPanel from './LeftPanel';
 import ChatRoom from './ChatRoom';
 import NoRoomSelected from './NoRoomSelected';
@@ -8,6 +8,7 @@ import NoRoomSelected from './NoRoomSelected';
 interface Props {
 	username: string
 	rooms: any[]
+	logOut: ()=>void
 }
 
 interface State {
@@ -29,6 +30,7 @@ export default class Chat extends Component<Props,State> {
 					username={this.props.username}
 					rooms={this.props.rooms}
 					selectedRoom={ (roomId, roomName) => this.getRoomDetails(roomId, roomName) }
+					logOut={this.props.logOut}
 				/>
 				{this.state.selectedRoom && (
 					<ChatRoom
@@ -53,23 +55,30 @@ export default class Chat extends Component<Props,State> {
 	}
 	
 	private getRoomDetails(roomId:number, roomName: string) {
-		fetch('http://localhost:8080/api/rooms/' + roomId + '/messages')
-		.then(res => res.json())
-		.then(
-			(roomMessages) => {
-				this.setState({
-					selectedRoom: {
-						name: roomName,
-						id: roomId,
-						users: roomMessages.map((x:any)=>x.name),
-						messages: roomMessages
-					}
-				});
-			}, (error) => {
-				console.log(error.message);
-				this.setState({
-					selectedRoom: null
-				});
+		Promise.all([
+			fetch('http://localhost:8080/api/rooms/' + roomId),
+			fetch('http://localhost:8080/api/rooms/' + roomId + '/messages')
+		]).then(function (responses) {
+			// Get a JSON object from each of the responses
+			return Promise.all(responses.map(function (response) {
+				return response.json();
+			}));
+		}).then( ([roomDetails, roomMessages]) => {
+			this.setState({
+				selectedRoom: {
+					name: roomName,
+					id: roomId,
+					users: roomDetails.users,
+					messages: roomMessages
+				}
 			});
+		}).catch( (error) => {
+			// if there's an error, log it and show it
+			console.error(error);
+			message.error(error.name + '. There seems to be an error fetching chat room details');
+			this.setState({
+				selectedRoom: null
+			});
+		});
 	}
 }
