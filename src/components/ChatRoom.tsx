@@ -73,7 +73,10 @@ export default class ChatRoom extends Component<Props,State> {
 						return (
 							<div key={i}>
 								<div className={styles.pastMessage}>{x.message}</div>
-								{arr[i+1] && arr[i].name!==arr[i+1].name && <div className={styles.sentUser}>{x.name}</div>}
+								{arr[i+1] ?
+									(arr[i].name!==arr[i+1].name ?
+										<div className={styles.sentUser}>{x.name}</div>:'')
+									: <div className={styles.sentUser}>{x.name}</div>}
 							</div>
 						);
 					}
