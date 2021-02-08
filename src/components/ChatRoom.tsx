@@ -136,7 +136,7 @@ export default class ChatRoom extends Component<Props,State> {
 			  message: msg,
 			})
 		};
-		fetch('http://localhost:8080/api/rooms/0/messages', requestOptions)
+		fetch('http://localhost:8080/api/rooms/' + this.props.selectedRoom.id + '/messages', requestOptions)
 			.then(res => res.json())
 			.then(() => {
 				fetch('http://localhost:8080/api/rooms/' + this.props.selectedRoom.id + '/messages')

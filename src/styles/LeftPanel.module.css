@@ -46,7 +46,9 @@
 	font-size: 20px;
 	padding: 0 8px 0 30px;
 	color: black;
+	position: fixed;
 	bottom: 0;
+	margin-bottom: 60px;
 }
 
 .logOutLink:hover {
