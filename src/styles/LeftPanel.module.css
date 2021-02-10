@@ -20,6 +20,12 @@
 	font-weight: bold;
 }
 
+.mightOverflow {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .onlineTime {
 	font-size: 14px;
 }

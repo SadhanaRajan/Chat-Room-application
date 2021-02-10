@@ -12,6 +12,10 @@ export default class NoRoomSelected extends Component<Props,State> {
 	constructor(props: Props) {
 		super(props);
 	}
+
+	/**
+	 * Renders an empty page with instructions for user to choose any room from given list
+	 */
 	public render(){
 		return (
 			<div className={styles.centerMessage}>

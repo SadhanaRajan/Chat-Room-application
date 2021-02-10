@@ -22,38 +22,48 @@ export default class Chat extends Component<Props,State> {
 			selectedRoom: null
 		};
 	}
+
+	/**
+	 * Renders Left panel with username and list of rooms
+	 * Once a room is selected, renders chat messages on the right
+	 */
 	public render() {
 		return (
-		<Fragment>
-			<div className={styles.ChatWindow}>
-				<LeftPanel
-					username={this.props.username}
-					rooms={this.props.rooms}
-					selectedRoom={ (roomId, roomName) => this.getRoomDetails(roomId, roomName) }
-					logOut={this.props.logOut}
-				/>
-				{this.state.selectedRoom && (
-					<ChatRoom
+			<>
+				<div className={styles.ChatWindow}>
+					<LeftPanel
 						username={this.props.username}
-						selectedRoom={this.state.selectedRoom}
-					/>
-				)}
-				{this.props.rooms.length===1 && (
-					<ChatRoom
-						username={this.props.username}
-						selectedRoom={this.props.rooms[0]}
-					/>
-				)}
-				{!this.state.selectedRoom && (
-					<NoRoomSelected
 						rooms={this.props.rooms}
+						selectedRoom={ (roomId, roomName) => this.getRoomDetails(roomId, roomName) }
+						logOut={this.props.logOut}
 					/>
-				)}
-			</div>
-		</Fragment>
+					{this.state.selectedRoom && (
+						<ChatRoom
+							username={this.props.username}
+							selectedRoom={this.state.selectedRoom}
+						/>
+					)}
+					{/* {this.props.rooms.length===1 && (
+						<ChatRoom
+							username={this.props.username}
+							selectedRoom={this.props.rooms[0]}
+						/>
+					)} */}
+					{!this.state.selectedRoom && (
+						<NoRoomSelected
+							rooms={this.props.rooms}
+						/>
+					)}
+				</div>
+			</>
 		);
 	}
 	
+	/**
+	 * Fetch room users list and messages from backend
+	 * @param roomId number ID of the chat room
+	 * @param roomName name of the chat room
+	 */
 	private getRoomDetails(roomId:number, roomName: string) {
 		Promise.all([
 			fetch('http://localhost:8080/api/rooms/' + roomId),

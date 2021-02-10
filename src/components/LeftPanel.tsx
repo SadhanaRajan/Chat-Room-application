@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 import styles from "../styles/LeftPanel.module.css";
 import { Form, Input, Button, message } from 'antd';
 import { clear } from 'console';
@@ -11,6 +13,7 @@ interface Props {
 }
 
 interface State {
+	usernameOverflow: boolean
 	onlineTimer: any
 	selectedRoom: number | null
 }
@@ -18,16 +21,20 @@ interface State {
 export default class LeftPanel extends Component<Props,State> {
 	private startTime: any;
 	private intervalID: NodeJS.Timeout | null
+	private textElement: any;
 	constructor(props: Props) {
 		super(props);
 		this.state = {
+			usernameOverflow: false,
 			onlineTimer: 'less than a second',
 			selectedRoom: null
 		};
 		this.intervalID = null;
+		this.textElement = React.createRef();
 	}
 	  
 	public componentDidMount() {
+		this.checkUsernameOverflow();
 		this.startTime = Date.now();
 		this.intervalID = setInterval(
 		  () => this.getOnlineTime(),
@@ -41,11 +48,28 @@ export default class LeftPanel extends Component<Props,State> {
 		}
 	}
 	
+	private renderUsername() {
+		return (
+			<div id={'username'} ref={this.textElement} className={`${styles.username} ${styles.mightOverflow}`}>
+				{this.props.username}
+			</div>
+		);
+	}
+
+	/**
+	 * Renders Left panel with username, list of rooms and an option to log out
+	 */
 	public render() {
 		return (
 			<div className={styles.LeftPanel}>
 				<div className={styles.nameTime}>
-					<div className={styles.username}>{this.props.username}</div>
+					{this.state.usernameOverflow ? (
+						<Tippy content={this.props.username} placement="right">
+							{this.renderUsername()}
+						</Tippy>
+					):(
+						this.renderUsername()
+					)}
 					{this.state.onlineTimer && <div className={styles.onlineTime}>Online for {this.state.onlineTimer}</div>}
 				</div>
 				<div className={styles.roomList}>
@@ -53,26 +77,39 @@ export default class LeftPanel extends Component<Props,State> {
 						return (
 							<div
 								key={i}
+								id={'roomName'+'_'+i}
 								className={`${styles.roomName} ${this.state.selectedRoom===x.id?styles.selectedRoomName:''}`}
 								onClick={()=>{this.selectRoom(x.id, x.name)}}
 							>{x.name}</div>
 						);
 					})}
 				</div>
-				<Button type="link" className={styles.logOutLink} onClick={()=>this.props.logOut()}>
+				<Button type="link" className={styles.logOutLink} id={'logout'} onClick={()=>this.props.logOut()}>
 					&#x21e4;&nbsp;Log out
 				</Button>
 			</div>
 		);
 	}
 
-	private millisecondsToStr () {
-		const milliseconds = Date.now() - this.startTime;
+	/**
+	 * sets state with session duration
+	 */
+	private getOnlineTime() {
+		this.setState({
+			onlineTimer: this.getDuration()
+		});
+	}
+
+	/**
+	 * Calculates duration user session, and converts to readable format
+	 */
+	private getDuration () {
+		const duration = Date.now() - this.startTime;
 		function numberEnding (number: number) {
 			return (number > 1) ? 's' : '';
 		}
 
-		var temp = Math.floor(milliseconds / 1000);
+		var temp = Math.floor(duration / 1000);
 		var years = Math.floor(temp / 31536000);
 		if (years) {
 			return years + ' year' + numberEnding(years);
@@ -97,12 +134,23 @@ export default class LeftPanel extends Component<Props,State> {
 		return 'less than a second';
 	}
 	
-	private getOnlineTime() {
-		this.setState({
-			onlineTimer: this.millisecondsToStr()
-		})
+	/**
+	 * checks username length is more than fixed width of it's <div>
+	 */
+	private checkUsernameOverflow(){
+		//TODO: check in chat room header too or restrict username length
+		if(this.textElement && this.textElement.current && this.textElement.current.scrollWidth > this.textElement.current.clientWidth){
+			this.setState({
+				usernameOverflow: true
+			});
+		}
 	}
-	
+
+	/**
+	 * Sets state when user selects a room
+	 * @param roomId 
+	 * @param roomName 
+	 */
 	private selectRoom(roomId:number, roomName:string): void {
 		this.setState({
 			selectedRoom: roomId

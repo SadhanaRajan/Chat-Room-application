@@ -5,7 +5,12 @@ import { Form, Input, Button } from 'antd';
 
 interface Props {
 	username: string
-	selectedRoom:any
+	selectedRoom: {
+		name: string,
+		id: number,
+		users?: string[],
+		messages?: any[]
+	}
 }
 
 interface State {
@@ -14,38 +19,43 @@ interface State {
 
 export default class ChatRoom extends Component<Props,State> {
 	private formRef : any
-	private messagesEnd: any;
+	private messagesEnd: HTMLDivElement | null
 	constructor(props: Props) {
 		super(props);
 		this.formRef = React.createRef();
+		this.messagesEnd = null;
 	}
 	  
 	componentDidMount() {
+		
 		this.scrollToBottom();
 	}
 
 	componentDidUpdate() {
 		this.scrollToBottom();
 	}
+
+	/**
+	 * Renders chat room UI
+	 */
 	public render(){
 		return (
 		<div className={styles.ChatRoom}>
 				{this.getChatRoomHeader()}
 				{this.getMessagesArea()}
 				{this.getChatRoomFooter()}
-			
-			
 		</div>
 		);
 	}
 	
 	private getChatRoomHeader(){
+		//TODO: check room with 10 or more users
 		return (
 			<div className={styles.ChatHeader}>
-				<div className={styles.chatRoomName}>{this.props.selectedRoom.name}</div>
-				<div className={styles.chatRoomUsers}>
+				<div className={styles.chatRoomName} id={'chatRoomName'}>{this.props.selectedRoom.name}</div>
+				<div className={styles.chatRoomUsers} id={'chatRoomUsers'}>
 					<span className={styles.currentUserName}>{this.props.username}</span>
-					{this.props.selectedRoom.users
+					{this.props.selectedRoom.users && this.props.selectedRoom.users
 						.filter((x:string)=>x!==this.props.username)
 						.map((x: string, i:number, arr: string[])=>{
 						return (
@@ -59,10 +69,14 @@ export default class ChatRoom extends Component<Props,State> {
 		);
 	}
 	
+	/**
+	 * Renders all messages in chat room
+	 * Will always scroll to the bottom automatically to show latest messages
+	 */
 	private getMessagesArea(){
 		return (
 			<div className={styles.messages}>
-				{this.props.selectedRoom.messages.map((x:any,i:number,arr:any[])=>{
+				{this.props.selectedRoom.messages && this.props.selectedRoom.messages.map((x:any,i:number,arr:any[])=>{
 					if(x.name===this.props.username){
 						return (
 							<div key={i}>
@@ -86,9 +100,18 @@ export default class ChatRoom extends Component<Props,State> {
 		);
 	}
 	
+	/**
+	 * Will always scroll to the bottom automatically to show latest messages
+	 */
 	private scrollToBottom = () => {
-	  this.messagesEnd.scrollIntoView();
+		if(this.messagesEnd) {
+			this.messagesEnd.scrollIntoView();
+		}
 	}
+
+	/**
+	 * Renders Form for user to type messages and send
+	 */
 	private getChatRoomFooter(){
 		return (
 			<div className={styles.typingArea}>
@@ -117,8 +140,7 @@ export default class ChatRoom extends Component<Props,State> {
 						/>
 					</Form.Item>
 					<Form.Item>
-						<Button type="link" htmlType="submit" className={styles.sendButton}
-						>
+						<Button type="link" htmlType="submit" className={styles.sendButton}>
 							Send
 						</Button>
 					</Form.Item>
@@ -127,6 +149,10 @@ export default class ChatRoom extends Component<Props,State> {
 		);
 	}
 	
+	/**
+	 * POST call to backend server to store the message sent
+	 * @param msg string message sent by current user
+	 */
 	private async sendMessage(msg: string) {
 		const requestOptions = {
 			method: 'POST',

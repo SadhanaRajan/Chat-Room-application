@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 
 import '../styles/App.css';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import Login from './Login';
 import Chat from './Chat';
 
@@ -17,7 +17,7 @@ interface State {
 export default class App extends Component<Props,State> {
 	private rooms: { name: React.ReactNode; }[];
 	constructor(props: Props) {
-	super(props);
+		super(props);
 		this.loginWithUsername = this.loginWithUsername.bind(this);
 		this.state = {
 			page: 'login'
@@ -25,6 +25,10 @@ export default class App extends Component<Props,State> {
 		this.rooms = [];
 	}
 
+	/**
+	 * fetch rooms data, and sets state with username
+	 * @param username string entered by user to login to chat app
+	 */
 	private loginWithUsername(username: string){
 		fetch('http://localhost:8080/api/rooms')
 		.then(res => res.json())
@@ -37,6 +41,7 @@ export default class App extends Component<Props,State> {
 				});
 			}, (error) => {
 				console.error(error.message);
+				message.error(error.name + '. There seems to be an error logging in');
 				this.setState({
 					page: 'login',
 					username: username
@@ -44,6 +49,9 @@ export default class App extends Component<Props,State> {
 			});
 	}
 
+	/**
+	 * Renders Login page or Chat page according to state
+	 */
 	public render() {
 		return (
 			<Fragment>
