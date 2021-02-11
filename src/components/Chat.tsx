@@ -1,9 +1,16 @@
+/**
+ * Chat Page after user has successfully logged in
+ * @module: Chat
+ * @author: Sadhana Rajan
+ */
+
 import React, { Component, Fragment } from 'react';
 import styles from "../styles/ChatRoom.module.css";
-import { Form, Input, Button, message } from 'antd';
+import { message } from 'antd';
 import LeftPanel from './LeftPanel';
 import ChatRoom from './ChatRoom';
 import NoRoomSelected from './NoRoomSelected';
+import API from '../apis/RoomsAPI'
 
 interface Props {
 	username: string
@@ -37,19 +44,12 @@ export default class Chat extends Component<Props,State> {
 						selectedRoom={ (roomId, roomName) => this.getRoomDetails(roomId, roomName) }
 						logOut={this.props.logOut}
 					/>
-					{this.state.selectedRoom && (
+					{this.state.selectedRoom ? (
 						<ChatRoom
 							username={this.props.username}
 							selectedRoom={this.state.selectedRoom}
 						/>
-					)}
-					{/* {this.props.rooms.length===1 && (
-						<ChatRoom
-							username={this.props.username}
-							selectedRoom={this.props.rooms[0]}
-						/>
-					)} */}
-					{!this.state.selectedRoom && (
+					) : (
 						<NoRoomSelected
 							rooms={this.props.rooms}
 						/>
@@ -66,14 +66,9 @@ export default class Chat extends Component<Props,State> {
 	 */
 	private getRoomDetails(roomId:number, roomName: string) {
 		Promise.all([
-			fetch('http://localhost:8080/api/rooms/' + roomId),
-			fetch('http://localhost:8080/api/rooms/' + roomId + '/messages')
-		]).then(function (responses) {
-			// Get a JSON object from each of the responses
-			return Promise.all(responses.map(function (response) {
-				return response.json();
-			}));
-		}).then( ([roomDetails, roomMessages]) => {
+			API.getRoomsDetailsAPI(roomId),
+			API.getMessagesAPI(roomId)
+		]).then( ([roomDetails, roomMessages]) => {
 			this.setState({
 				selectedRoom: {
 					name: roomName,

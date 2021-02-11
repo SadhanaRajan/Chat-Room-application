@@ -1,9 +1,14 @@
+/**
+ * Panel to show user details, and rooms list 
+ * @module: LeftPanel
+ * @author: Sadhana Rajan
+ */
+
 import React, { Component, Fragment } from 'react';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import styles from "../styles/LeftPanel.module.css";
-import { Form, Input, Button, message } from 'antd';
-import { clear } from 'console';
+import { Button } from 'antd';
 
 interface Props {
 	username: string

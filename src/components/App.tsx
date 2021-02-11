@@ -1,9 +1,15 @@
-import React, { Component, Fragment } from 'react';
+/**
+ * Entry page for Chat room Application
+ * @module: App
+ * @author: Sadhana Rajan
+ */
 
+import React, { Component, Fragment } from 'react';
 import '../styles/App.css';
-import { Button, message } from 'antd';
+import { message } from 'antd';
 import Login from './Login';
 import Chat from './Chat';
+import API from '../apis/RoomsAPI'
 
 interface Props {
   
@@ -30,23 +36,20 @@ export default class App extends Component<Props,State> {
 	 * @param username string entered by user to login to chat app
 	 */
 	private loginWithUsername(username: string){
-		fetch('http://localhost:8080/api/rooms')
-		.then(res => res.json())
-		.then(
-			(result) => {
-				this.rooms = result;
-				this.setState({
-					page: 'chat',
-					username: username
-				});
-			}, (error) => {
-				console.error(error.message);
-				message.error(error.name + '. There seems to be an error logging in');
-				this.setState({
-					page: 'login',
-					username: username
-				});
+		API.getRoomListAPI().then((result)=>{
+			this.rooms = result;
+			this.setState({
+				page: 'chat',
+				username: username
 			});
+		}).catch((error)=>{
+			console.error(error.message);
+			message.error(error.name + '. There seems to be an error logging in');
+			this.setState({
+				page: 'login',
+				username: username
+			});
+		});
 	}
 
 	/**

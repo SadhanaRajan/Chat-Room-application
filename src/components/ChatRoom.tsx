@@ -1,7 +1,14 @@
+/**
+ * Chat Room main panel - shows room details and messages
+ * @module: ChatRoom
+ * @author: Sadhana Rajan
+ */
+
 import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import styles from "../styles/ChatRoom.module.css";
 import { Form, Input, Button } from 'antd';
+import API from '../apis/RoomsAPI';
 
 interface Props {
 	username: string
@@ -154,26 +161,17 @@ export default class ChatRoom extends Component<Props,State> {
 	 * @param msg string message sent by current user
 	 */
 	private async sendMessage(msg: string) {
-		const requestOptions = {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-			  name: this.props.username,
-			  message: msg,
-			})
-		};
-		fetch('http://localhost:8080/api/rooms/' + this.props.selectedRoom.id + '/messages', requestOptions)
-			.then(res => res.json())
-			.then(() => {
-				fetch('http://localhost:8080/api/rooms/' + this.props.selectedRoom.id + '/messages')
-				.then(res => res.json())
-				.then((updatedMessages) => {
-					this.props.selectedRoom.messages = updatedMessages;
-					this.formRef.current.resetFields();
-					this.setState({
-						messageSent: msg
-					});
-			}, (error) => {
+		API.postMessagesAPI(this.props.selectedRoom.id, {
+			name: this.props.username,
+			message: msg
+		}).then(()=>{
+			API.getMessagesAPI(this.props.selectedRoom.id).then((updatedMessages)=>{
+				this.props.selectedRoom.messages = updatedMessages;
+				this.formRef.current.resetFields();
+				this.setState({
+					messageSent: msg
+				});
+			}).catch( (error) => {
 				console.error(error.message);
 				this.setState({
 					messageSent: null

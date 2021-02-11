@@ -1,3 +1,9 @@
+/**
+ * Login page for username
+ * @module: Login
+ * @author: Sadhana Rajan
+ */
+
 import React, { Component } from 'react';
 import styles from "../styles/Login.module.css";
 import { Form, Input, Button, Alert } from 'antd';
