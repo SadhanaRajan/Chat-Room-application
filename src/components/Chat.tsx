@@ -69,11 +69,13 @@ export default class Chat extends Component<Props,State> {
 			API.getRoomsDetailsAPI(roomId),
 			API.getMessagesAPI(roomId)
 		]).then( ([roomDetails, roomMessages]) => {
+			//de-duplicate users list
+			const userSet = [...new Set(roomDetails.users)];
 			this.setState({
 				selectedRoom: {
 					name: roomName,
 					id: roomId,
-					users: roomDetails.users,
+					users: userSet,
 					messages: roomMessages
 				}
 			});

@@ -164,8 +164,8 @@ export default class ChatRoom extends Component<Props,State> {
 		API.postMessagesAPI(this.props.selectedRoom.id, {
 			name: this.props.username,
 			message: msg
-		}).then(()=>{
-			API.getMessagesAPI(this.props.selectedRoom.id).then((updatedMessages)=>{
+		}).then( () =>{
+			API.getMessagesAPI(this.props.selectedRoom.id).then( (updatedMessages) =>{
 				this.props.selectedRoom.messages = updatedMessages;
 				this.formRef.current.resetFields();
 				this.setState({

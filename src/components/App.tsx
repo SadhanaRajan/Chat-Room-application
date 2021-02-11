@@ -35,14 +35,14 @@ export default class App extends Component<Props,State> {
 	 * fetch rooms data, and sets state with username
 	 * @param username string entered by user to login to chat app
 	 */
-	private loginWithUsername(username: string){
-		API.getRoomListAPI().then((result)=>{
+	private loginWithUsername(username: string) {
+		API.getRoomListAPI().then( (result) => {
 			this.rooms = result;
 			this.setState({
 				page: 'chat',
 				username: username
 			});
-		}).catch((error)=>{
+		}).catch( (error) => {
 			console.error(error.message);
 			message.error(error.name + '. There seems to be an error logging in');
 			this.setState({
@@ -75,6 +75,6 @@ export default class App extends Component<Props,State> {
 					/>
 				)}
 			</Fragment>
-		)
+		);
 	}
 }
