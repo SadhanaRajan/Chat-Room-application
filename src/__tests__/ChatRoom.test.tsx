@@ -9,10 +9,10 @@ const wrapper = shallow(
 		selectedRoom={{
 			name: "Beckham Room",
 			id: 0,
-			users: ['John'],
+			users: ['Jane, Jack, Joseph'],
 			messages: [{
-				message: "Hello, I am John",
-				name: "John"
+				message: "Hello, I am Jane",
+				name: "Jane"
 			}]
 		}}
 	/>);
@@ -44,6 +44,6 @@ describe('Chat Room Tests', () => {
 
 	test('Test renders Chat room users', () => {
 		const chatRoomUsersDiv = wrapper.find('#chatRoomUsers');
-		expect(chatRoomUsersDiv.text()).toBe("John");
+		expect(chatRoomUsersDiv.text()).toBe("John, Jane, Jack, Joseph");
 	});
 });

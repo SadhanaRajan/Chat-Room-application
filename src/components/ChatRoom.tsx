@@ -22,24 +22,39 @@ interface Props {
 
 interface State {
 	messageSent: string | null
+	refresh: boolean
 }
 
 export default class ChatRoom extends Component<Props,State> {
 	private formRef : any
 	private messagesEnd: HTMLDivElement | null
+	private intervalID: NodeJS.Timeout | null
+
 	constructor(props: Props) {
 		super(props);
 		this.formRef = React.createRef();
+		this.intervalID = null;
 		this.messagesEnd = null;
 	}
 	  
-	componentDidMount() {
+	async componentDidMount() {
 		
 		this.scrollToBottom();
+		////////// this is highly dangerous //////// commenting it out for now
+		// this.intervalID = setInterval(
+		//   () => this.checkForNewMessages(),
+		//   1000
+		// );
 	}
 
-	componentDidUpdate() {
+	async componentDidUpdate() {
 		this.scrollToBottom();
+	}
+	
+	public componentWillUnmount() {
+		if(this.intervalID) {
+			clearInterval(this.intervalID);
+		}
 	}
 
 	/**
@@ -156,6 +171,24 @@ export default class ChatRoom extends Component<Props,State> {
 		);
 	}
 	
+	private async checkForNewMessages(){
+		API.getMessagesAPI(this.props.selectedRoom.id).then( (messages) =>{
+			if(JSON.stringify(this.props.selectedRoom.messages)!==JSON.stringify(messages)){
+				//new message found - needs refresh
+				this.props.selectedRoom.messages = messages;
+				this.formRef.current.resetFields();
+				this.setState({
+					refresh: true
+				});
+			}
+		}).catch( (error) => {
+			console.error(error.message);
+			this.setState({
+				messageSent: null
+			});
+		});
+	}
+	
 	/**
 	 * POST call to backend server to store the message sent
 	 * @param msg string message sent by current user
@@ -167,7 +200,7 @@ export default class ChatRoom extends Component<Props,State> {
 		}).then( () =>{
 			API.getMessagesAPI(this.props.selectedRoom.id).then( (updatedMessages) =>{
 				this.props.selectedRoom.messages = updatedMessages;
-				this.formRef.current.resetFields();
+				this.formRef.current.setFieldsValue({currentText:''});
 				this.setState({
 					messageSent: msg
 				});
