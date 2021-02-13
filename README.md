@@ -1,4 +1,4 @@
-# Chat APP - Frontend Project
+# Chat Room Application - Frontend Project
 
 ## Getting Started
 
