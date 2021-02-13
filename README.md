@@ -1,11 +1,6 @@
-# DoorDash Frontend Interview Project
+# Chat Room Application - Frontend Project
 
--   TLDR: _Build a chat app with real APIs_
--   Time: _3hr - 6hrs_
--   Allowed tools & frameworks: _anything_
--   Show us what you got!
-
-## Getting Started with Doordash Chat App
+## Getting Started
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -40,9 +35,8 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 ### Intents:
 
-1. Created react + typescript app in this dd_takehome_react folder using this command
-   `npx create-react-app dd_takehome_react --template typescript`
-   This was to get a boilerplate react app started
+1. This project was bootstrapped using
+   `npx create-react-app Chat-Room-application --template typescript`
 
 2. Installed `antd` package - this was to use form elements that look neat and modern
 
